@@ -37,3 +37,20 @@ INSERT INTO usuarios (nombre, apellido_paterno, apellido_materno, email, numero_
 VALUES ('Juan', 'Pérez', 'García', 'juan@ejemplo.com', '9876543210', 'usuario1', '123456', 'USUARIO', TRUE)
     ON DUPLICATE KEY UPDATE id=id;
 
+CREATE TABLE IF NOT EXISTS libros_favoritos (
+                                                id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                                                usuario_id BIGINT NOT NULL,
+                                                titulo VARCHAR(500) NOT NULL,
+    autor VARCHAR(300),
+    año_publicacion VARCHAR(20),
+    cover_id VARCHAR(50),
+    temas TEXT,
+    fecha_agregado DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_book (usuario_id, titulo, autor)
+    );
+
+-- Índices para optimización
+CREATE INDEX idx_libros_favoritos_usuario ON libros_favoritos(usuario_id);
+CREATE INDEX idx_libros_favoritos_titulo ON libros_favoritos(titulo);
+CREATE INDEX idx_libros_favoritos_fecha ON libros_favoritos(fecha_agregado);
